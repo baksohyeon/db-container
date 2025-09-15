@@ -86,6 +86,7 @@ services:
       - "${PGADMIN_PORT:-8080}:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+      - ./postgres/pgadmin_servers.json:/pgadmin4/servers.json:ro
     networks:
       - database-network
     depends_on:

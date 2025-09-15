@@ -1,0 +1,25 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "PostgreSQL Database",
+      "Group": "Servers",
+      "Host": "postgres-db",
+      "Port": 5432,
+      "MaintenanceDB": "postgres",
+      "Username": "postgres",
+      "PassFile": "",
+      "SSLMode": "prefer",
+      "SSLCert": "",
+      "SSLKey": "",
+      "SSLRootCert": "",
+      "SSLCrl": "",
+      "SSLCompression": 0,
+      "Timeout": 10,
+      "UseSSHTunnel": 0,
+      "TunnelHost": "",
+      "TunnelPort": "22",
+      "TunnelUsername": "",
+      "TunnelAuthentication": 0
+    }
+  }
+}

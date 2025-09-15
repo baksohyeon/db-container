@@ -21,12 +21,26 @@ make postgres   # PostgreSQL
 
 ## Default Connection Details
 
-| Service        | Host      | Port | Database | User          | Password              |
-| -------------- | --------- | ---- | -------- | ------------- | --------------------- |
-| MySQL          | localhost | 3306 | testdb   | testuser      | testpass              |
-| Redis          | localhost | 6379 | -        | -             | redispass             |
-| PostgreSQL     | localhost | 5432 | testdb   | postgres      | postgres              |
-| PostgreSQL App | localhost | 5432 | testdb   | myapp_backend | myapp_secure_password |
+| Service        | Host      | Port | Database | User              | Password              |
+| -------------- | --------- | ---- | -------- | ----------------- | --------------------- |
+| MySQL          | localhost | 3306 | testdb   | testuser          | testpass              |
+| Redis          | localhost | 6379 | -        | -                 | redispass             |
+| PostgreSQL     | localhost | 5432 | testdb   | postgres          | postgres              |
+| PostgreSQL App | localhost | 5432 | testdb   | myapp_backend     | myapp_secure_password |
+| pgAdmin        | localhost | 8080 | -        | admin@example.com | admin                 |
+
+## pgadmin 사용법
+
+- 왼쪽 사이드바에서 "Servers" 우클릭 →
+  "Register" → "Server..."
+- General 탭:
+  Name: PostgreSQL Database
+- Connection 탭:
+  - Host name/address: postgres-db
+  - Port: 5432
+  - Maintenance database: postgres
+  - Username: postgres
+  - Password: postgres
 
 ## Environment Variables
 
@@ -51,6 +65,11 @@ POSTGRES_PASSWORD=postgres
 POSTGRES_PORT=5432
 POSTGRES_APP_USER=myapp_backend
 POSTGRES_APP_PASSWORD=myapp_secure_password
+
+# pgAdmin
+PGADMIN_EMAIL=admin@example.com
+PGADMIN_PASSWORD=admin
+PGADMIN_PORT=8080
 ```
 
 ## Available Commands
@@ -73,6 +92,7 @@ make mysql-root     # Connect as MySQL root
 make redis          # Connect to Redis
 make postgres       # Connect to PostgreSQL
 make postgres-app   # Connect as PostgreSQL app user
+make pgadmin        # Open pgAdmin web interface
 ```
 
 ### Backup & Maintenance
@@ -99,7 +119,10 @@ database-container/
 ├── docker-compose.yml      # Docker configuration
 ├── Makefile               # Management commands
 ├── mysql/init/            # MySQL initialization scripts
-├── postgres/init/         # PostgreSQL initialization scripts
+├── postgres/
+│   ├── init/              # PostgreSQL initialization scripts
+│   ├── postgresql.conf    # PostgreSQL configuration
+│   └── pgadmin_servers.json # pgAdmin server configuration
 ├── redis/redis.conf       # Redis configuration
 └── README.md
 ```
