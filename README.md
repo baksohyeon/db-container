@@ -10,6 +10,9 @@ make start
 # Check status
 make status
 
+# Open pgAdmin web interface
+make pgadmin
+
 # Connect to databases
 make mysql      # MySQL
 make redis      # Redis

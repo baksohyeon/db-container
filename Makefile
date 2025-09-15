@@ -75,6 +75,22 @@ postgres: check-docker
 postgres-app: check-docker
 	@docker exec -it postgres-db psql -U myapp_backend -d testdb
 
+# Open pgAdmin in browser
+.PHONY: pgadmin
+pgadmin: check-docker
+	@echo "$(BLUE)Opening pgAdmin...$(NC)"
+	@echo "$(GREEN)pgAdmin URL: http://localhost:8080$(NC)"
+	@echo "$(GREEN)Default Login:$(NC)"
+	@echo "  Email: admin@example.com"
+	@echo "  Password: admin"
+	@if command -v open >/dev/null 2>&1; then \
+		open http://localhost:8080; \
+	elif command -v xdg-open >/dev/null 2>&1; then \
+		xdg-open http://localhost:8080; \
+	else \
+		echo "Please open http://localhost:8080 in your browser"; \
+	fi
+
 # Create MySQL backup
 .PHONY: backup
 backup: check-docker
@@ -120,6 +136,10 @@ info:
 	@echo "$(GREEN)PostgreSQL:$(NC)"
 	@echo "  postgresql://postgres:postgres@localhost:5432/testdb"
 	@echo "  postgresql://myapp_backend:myapp_secure_password@localhost:5432/testdb"
+	@echo ""
+	@echo "$(GREEN)pgAdmin:$(NC)"
+	@echo "  Web Interface: http://localhost:8080"
+	@echo "  Default Login: admin@example.com / admin"
 
 # Show help
 .PHONY: help
@@ -139,6 +159,7 @@ help:
 	@echo "  redis          Connect to Redis"
 	@echo "  postgres       Connect to PostgreSQL"
 	@echo "  postgres-app   Connect to PostgreSQL as app user"
+	@echo "  pgadmin        Open pgAdmin web interface"
 	@echo ""
 	@echo "$(GREEN)Backup & Maintenance:$(NC)"
 	@echo "  backup         Backup MySQL"
