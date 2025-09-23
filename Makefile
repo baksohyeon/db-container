@@ -1,5 +1,5 @@
 # Database Container Manager - Makefile
-# Manages MySQL, Redis, and PostgreSQL containers using Docker Compose
+# Manages MySQL, Redis, PostgreSQL, MinIO, and Kafka containers using Docker Compose
 
 # Include environment variables if .env exists
 -include .env
@@ -91,6 +91,48 @@ pgadmin: check-docker
 		echo "Please open http://localhost:8080 in your browser"; \
 	fi
 
+# Open MinIO Console in browser
+.PHONY: minio
+minio: check-docker
+	@echo "$(BLUE)Opening MinIO Console...$(NC)"
+	@echo "$(GREEN)MinIO Console URL: http://localhost:9001$(NC)"
+	@echo "$(GREEN)MinIO API URL: http://localhost:9000$(NC)"
+	@echo "$(GREEN)Default Login:$(NC)"
+	@echo "  Username: minioadmin"
+	@echo "  Password: minioadmin123"
+	@if command -v open >/dev/null 2>&1; then \
+		open http://localhost:9001; \
+	elif command -v xdg-open >/dev/null 2>&1; then \
+		xdg-open http://localhost:9001; \
+	else \
+		echo "Please open http://localhost:9001 in your browser"; \
+	fi
+
+# Connect to Kafka
+.PHONY: kafka
+kafka: check-docker
+	@echo "$(BLUE)Connecting to Kafka...$(NC)"
+	@echo "$(GREEN)Kafka Broker: localhost:9092$(NC)"
+	@docker exec -it kafka kafka-console-consumer --bootstrap-server localhost:9092 --topic test --from-beginning
+
+# List Kafka topics
+.PHONY: kafka-topics
+kafka-topics: check-docker
+	@echo "$(BLUE)Listing Kafka topics...$(NC)"
+	@docker exec -it kafka kafka-topics --bootstrap-server localhost:9092 --list
+
+# Create Kafka topic
+.PHONY: kafka-create-topic
+kafka-create-topic: check-docker
+	@read -p "Enter topic name: " topic; \
+	docker exec -it kafka kafka-topics --bootstrap-server localhost:9092 --create --topic $$topic --partitions 3 --replication-factor 1
+
+# Connect to Zookeeper
+.PHONY: zookeeper
+zookeeper: check-docker
+	@echo "$(BLUE)Connecting to Zookeeper...$(NC)"
+	@docker exec -it zookeeper zkCli.sh
+
 # Create MySQL backup
 .PHONY: backup
 backup: check-docker
@@ -140,6 +182,17 @@ info:
 	@echo "$(GREEN)pgAdmin:$(NC)"
 	@echo "  Web Interface: http://localhost:8080"
 	@echo "  Default Login: admin@example.com / admin"
+	@echo ""
+	@echo "$(GREEN)MinIO:$(NC)"
+	@echo "  Console: http://localhost:9001"
+	@echo "  API: http://localhost:9000"
+	@echo "  Default Login: minioadmin / minioadmin123"
+	@echo ""
+	@echo "$(GREEN)Kafka:$(NC)"
+	@echo "  Broker: localhost:9092"
+	@echo ""
+	@echo "$(GREEN)Zookeeper:$(NC)"
+	@echo "  Connection: localhost:2181"
 
 # Show help
 .PHONY: help
@@ -160,6 +213,11 @@ help:
 	@echo "  postgres       Connect to PostgreSQL"
 	@echo "  postgres-app   Connect to PostgreSQL as app user"
 	@echo "  pgadmin        Open pgAdmin web interface"
+	@echo "  minio          Open MinIO console"
+	@echo "  kafka          Connect to Kafka consumer"
+	@echo "  kafka-topics   List Kafka topics"
+	@echo "  kafka-create-topic Create new Kafka topic"
+	@echo "  zookeeper      Connect to Zookeeper CLI"
 	@echo ""
 	@echo "$(GREEN)Backup & Maintenance:$(NC)"
 	@echo "  backup         Backup MySQL"

@@ -17,17 +17,34 @@ make pgadmin
 make mysql      # MySQL
 make redis      # Redis
 make postgres   # PostgreSQL
+
+# Access web interfaces
+make pgadmin    # pgAdmin
+make minio      # MinIO Console
 ```
 
 ## Default Connection Details
 
-| Service        | Host      | Port | Database | User              | Password              |
-| -------------- | --------- | ---- | -------- | ----------------- | --------------------- |
-| MySQL          | localhost | 3306 | testdb   | testuser          | testpass              |
-| Redis          | localhost | 6379 | -        | -                 | redispass             |
-| PostgreSQL     | localhost | 5432 | testdb   | postgres          | postgres              |
-| PostgreSQL App | localhost | 5432 | testdb   | myapp_backend     | myapp_secure_password |
-| pgAdmin        | localhost | 8080 | -        | admin@example.com | admin                 |
+| Service        | Host      | Port                       | Database | User              | Password              |
+| -------------- | --------- | -------------------------- | -------- | ----------------- | --------------------- |
+| MySQL          | localhost | 3306                       | testdb   | testuser          | testpass              |
+| Redis          | localhost | 6379                       | -        | -                 | redispass             |
+| PostgreSQL     | localhost | 5432                       | testdb   | postgres          | postgres              |
+| PostgreSQL App | localhost | 5432                       | testdb   | myapp_backend     | myapp_secure_password |
+| pgAdmin        | localhost | 8080                       | -        | admin@example.com | admin                 |
+| MinIO          | localhost | 9000 (api), 9001 (console) | -        | minioadmin        | minioadmin123         |
+| Kafka          | localhost | 9092                       | -        | -                 | -                     |
+| Zookeeper      | localhost | 2181                       | -        | -                 | -                     |
+
+## Service Access
+
+### Web Interfaces
+- **pgAdmin**: http://localhost:8080
+- **MinIO Console**: http://localhost:9001
+
+### Command Line Access
+- **Kafka**: Use kafka tools or connect to localhost:9092
+- **Zookeeper**: Connect to localhost:2181
 
 ## pgadmin 사용법
 
@@ -70,6 +87,25 @@ POSTGRES_APP_PASSWORD=myapp_secure_password
 PGADMIN_EMAIL=admin@example.com
 PGADMIN_PASSWORD=admin
 PGADMIN_PORT=8080
+
+# MinIO
+MINIO_ROOT_USER=minioadmin
+MINIO_ROOT_PASSWORD=minioadmin123
+MINIO_API_PORT=9000
+MINIO_CONSOLE_PORT=9001
+
+# Kafka & Zookeeper
+ZOOKEEPER_PORT=2181
+ZOOKEEPER_CLIENT_PORT=2181
+ZOOKEEPER_TICK_TIME=2000
+
+KAFKA_PORT=9092
+KAFKA_BROKER_ID=1
+KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
 ```
 
 ## Available Commands
@@ -93,6 +129,8 @@ make redis          # Connect to Redis
 make postgres       # Connect to PostgreSQL
 make postgres-app   # Connect as PostgreSQL app user
 make pgadmin        # Open pgAdmin web interface
+make minio          # Open MinIO console
+make kafka          # Connect to Kafka broker
 ```
 
 ### Backup & Maintenance
@@ -118,6 +156,7 @@ make help          # Show all commands
 database-container/
 ├── docker-compose.yml      # Docker configuration
 ├── Makefile               # Management commands
+├── .env                   # Environment variables
 ├── mysql/init/            # MySQL initialization scripts
 ├── postgres/
 │   ├── init/              # PostgreSQL initialization scripts
