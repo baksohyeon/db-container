@@ -2,9 +2,13 @@
 
 ## Quick Start
 
+- docker download
+https://get.docker.com/
+
 ```bash
 # Start all databases
 cp .env.exmaple .env
+
 make start
 
 # Check status
